@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Planet Clicker</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Bouton pause en haut à droite -->
+  <button id="pauseButton" onclick="togglePause()">⏸️ Pause</button>
+
+  <!-- Titre -->
+  <h1>Planet Clicker</h1>
+
+  <!-- Planète cliquable -->
+  <div id="planet"></div>
+
+  <!-- Score et niveau -->
+  <h2>Énergie : <span id="score">0</span></h2>
+  <h3>Niveau : <span id="level">0 / 30</span></h3>
+
+  <!-- Planètes restantes -->
+  <h3 id="remainingPlanets">🌌 Planètes restantes : 30</h3>
+
+  <!-- Boutons améliorations -->
+  <button id="clickUpgrade" onclick="buyUpgrade('click')">
+    Améliorer clic (coût : <span id="clickCost">200</span>)
+  </button>
+  <button id="autoUpgrade" onclick="buyUpgrade('auto')">
+    Auto-click (coût : <span id="autoCost">200</span>)
+  </button>
+
+  <!-- Planètes à débloquer -->
+  <h3>Planètes à débloquer :</h3>
+  <div id="planetsContainer"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>

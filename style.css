@@ -1,0 +1,107 @@
+/* Corps de la page */
+body {
+  background: radial-gradient(circle, #020024, #090979, #000);
+  color: white;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+/* Titres */
+h1 { margin-top: 20px; font-size: 3em; }
+h2, h3 { margin: 10px 0; }
+
+/* Planète cliquable */
+#planet {
+  width: 150px;
+  height: 150px;
+  margin: 20px auto;
+  border-radius: 50%;
+  background: radial-gradient(circle, #3fa9f5, #004e92);
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+#planet:hover { box-shadow: 0 0 20px #fff; }
+#planet:active { transform: scale(0.95); }
+
+/* Score flottant */
+.score-float {
+  position: absolute;
+  font-size: 18px;
+  font-weight: bold;
+  color: #66fffb;
+  pointer-events: none;
+  animation: floatUp 1s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { transform: translateY(0); opacity: 1; }
+  100% { transform: translateY(-50px); opacity: 0; }
+}
+
+/* Boutons améliorations et planètes */
+button {
+  margin: 5px;
+  padding: 10px 20px;
+  font-size: 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #3fa9f5;
+  color: white;
+  border: 2px solid #004e92;
+  transition: background-color 0.2s, transform 0.1s, filter 0.2s;
+}
+
+button:hover:enabled { background-color: #66b3ff; }
+button:active:enabled { transform: scale(0.95); }
+
+/* Planètes non achetables mais visibles */
+#planetsContainer button.locked {
+  opacity: 0.6;
+  cursor: not-allowed;
+  color: #ccc;
+}
+
+/* Planètes déjà débloquées ou achetables */
+#planetsContainer button:enabled {
+  opacity: 1;
+  filter: none;
+}
+
+/* Nom des planètes dans les boutons */
+#planetsContainer button .planet-name {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Conteneur des planètes (boutons) */
+#planetsContainer {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+/* Bouton pause */
+#pauseButton {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  background-color: #ffb733;
+  color: #000;
+  border: 2px solid #ffaa00;
+  font-size: 16px;
+  padding: 8px 16px;
+}
+
+#pauseButton:hover { background-color: #ffd966; }
+
+/* Responsive pour mobile */
+@media (max-width: 600px) {
+  #planet { width: 120px; height: 120px; }
+  button { width: 90%; margin: 5px auto; }
+}
