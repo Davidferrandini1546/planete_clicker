@@ -1,7 +1,7 @@
 // ================== VARIABLES ==================
 let score = 0;
 
-let clickPower = 10; // puissance clic normal
+let clickPower = 10;
 let clickCost = 200;
 
 let autoClickLevel = 0;
@@ -9,8 +9,7 @@ let autoClickPower = 0;
 let autoCost = 200;
 
 const tickPerSecond = 10;
-
-let isPaused = false; // état pause
+let isPaused = false;
 
 // ================== PLANÈTES (30) ==================
 const planets = [
@@ -54,10 +53,7 @@ planets.forEach((planet, index) => {
   btn.id = `planet${index + 1}`;
   btn.innerHTML = `<span class="planet-name">${planet.name}</span><br>Coût : ${planet.cost}`;
   btn.onclick = () => buyPlanet(index);
-
-  // cacher toutes sauf la première
   if (index !== 0) btn.style.display = "none";
-
   planetsContainer.appendChild(btn);
 });
 
@@ -73,8 +69,8 @@ setInterval(() => {
 const planetEl = document.getElementById("planet");
 planetEl.addEventListener("click", () => {
   if (isPaused) return;
-  score += clickPower / 2; // clic normal divisé par 2
-  showFloatingScore(`+${clickPower / 2}`);
+  score += clickPower;
+  showFloatingScore(`+${clickPower}`);
   animatePlanet();
   updateScore();
 });
@@ -109,8 +105,8 @@ function buyUpgrade(type) {
   if (type === "auto" && score >= autoCost) {
     score -= autoCost;
     autoClickLevel++;
-    autoClickPower = 320 * autoClickLevel; // auto-click ×320/sec
-    autoCost *= 2;
+    autoClickPower += 50; // 🔥 augmente à chaque clic
+    autoCost = Math.floor(autoCost * 2);
     document.getElementById("autoCost").textContent = autoCost;
   }
 
@@ -121,42 +117,28 @@ function buyUpgrade(type) {
 function buyPlanet(index) {
   const planet = planets[index];
   const btn = document.getElementById(`planet${index + 1}`);
-
   if (planet.unlocked || score < planet.cost) return;
 
   score -= planet.cost;
   planet.unlocked = true;
 
-  // changer planète principale
   planetEl.style.background = planet.color;
   document.getElementById("level").textContent = `${index + 1} / ${planets.length}`;
 
-  // cacher bouton actuel
   btn.style.display = "none";
-
-  // montrer bouton suivant
   const nextBtn = document.getElementById(`planet${index + 2}`);
   if (nextBtn) nextBtn.style.display = "inline-block";
 
   updateScore();
 }
 
-// ================== PLANÈTES RESTANTES ==================
-function updateRemainingPlanets() {
-  const unlockedCount = planets.filter(p => p.unlocked).length;
-  const remaining = planets.length - unlockedCount;
-  document.getElementById("remainingPlanets").textContent =
-    `🌌 Planètes restantes : ${remaining}`;
-}
-
-// ================== BOUTON PAUSE ==================
-function togglePause() {
-  isPaused = !isPaused;
-  const btn = document.getElementById("pauseButton");
-  btn.textContent = isPaused ? "▶️ Jouer" : "⏸️ Pause";
-}
-
 // ================== UI ==================
+function updateRemainingPlanets() {
+  const remaining = planets.length - planets.filter(p => p.unlocked).length;
+  document.getElementById("remainingPlanets").textContent =
+  `🌌 Planètes restantes : ${remaining}`;
+}
+
 function updateScore() {
   document.getElementById("score").textContent = Math.floor(score);
   updateButtons();
@@ -166,15 +148,50 @@ function updateScore() {
 function updateButtons() {
   planets.forEach((planet, index) => {
     const btn = document.getElementById(`planet${index + 1}`);
-    if (btn.style.display !== "none") {
+    if (btn && btn.style.display !== "none") {
       btn.disabled = score < planet.cost || isPaused;
     }
   });
-
   document.getElementById("clickUpgrade").disabled = score < clickCost || isPaused;
   document.getElementById("autoUpgrade").disabled = score < autoCost || isPaused;
 }
 
+// ================== PAUSE ==================
+function togglePause() {
+  isPaused = !isPaused;
+  document.getElementById("pauseButton").textContent =
+    isPaused ? "▶️ Jouer" : "⏸️ Pause";
+}
+
+// ================== RESET ==================
+document.getElementById("resetButton").addEventListener("click", resetGame);
+
+function resetGame() {
+  if (!confirm("Voulez-vous vraiment recommencer la partie ?")) return;
+
+  score = 0;
+  clickPower = 10;
+  clickCost = 200;
+  autoClickLevel = 0;
+  autoClickPower = 0;
+  autoCost = 200;
+
+  document.getElementById("clickCost").textContent = clickCost;
+  document.getElementById("autoCost").textContent = autoCost;
+
+  planets.forEach((planet, index) => {
+    planet.unlocked = false;
+    const btn = document.getElementById(`planet${index + 1}`);
+    btn.style.display = index === 0 ? "inline-block" : "none";
+  });
+
+  planetEl.style.background = "radial-gradient(circle, #3fa9f5, #004e92)";
+  document.getElementById("level").textContent = `0 / ${planets.length}`;
+  isPaused = false;
+  document.getElementById("pauseButton").textContent = "⏸️ Pause";
+
+  updateScore();
+}
+
 // ================== INIT ==================
-updateButtons();
-updateRemainingPlanets();
+updateScore();
